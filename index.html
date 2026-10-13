@@ -83,6 +83,7 @@
   .seg { display:inline-flex; background:var(--card); border-radius:30px; padding:4px; box-shadow:0 2px 14px rgba(30,40,90,0.04); }
   .seg button { font:inherit; font-size:0.86em; font-weight:700; padding:9px 18px; border-radius:30px; border:none; background:none; color:var(--muted); cursor:pointer; }
   .seg button.on { background:var(--accent); color:#fff; }
+  .pv-segs { display:flex; flex-wrap:wrap; gap:10px; }
 
   /* ── The email itself (kept in light colors — it's what the customer sees) ── */
   .email { max-width:870px; background:#fff; border-radius:22px; overflow:hidden; color:#05001c; font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; letter-spacing:0; box-shadow:0 2px 14px rgba(30,40,90,0.05); }
@@ -112,6 +113,23 @@
   .em-carrier { color:#3a3d4a; font-size:0.9em; margin-bottom:46px !important; }
   .em-deliv .em-claimline { color:#3a3d4a; font-size:0.9em; margin-bottom:22px; }
   .em-btn-grey { display:inline-block; padding:16px 58px; border-radius:40px; background:#ededed; color:#000; font-size:0.94em; text-decoration:none; margin-bottom:68px; }
+  .em-deliv.ret .em-btn-grey { margin-bottom:34px; }
+  .em-deliv.ret .em-btn-grey.last { margin-bottom:68px; }
+  /* Ordered email, Returns coverage (verbatim portal template) */
+  .em-ret h3 { font-size:1em; font-weight:700; margin-bottom:18px; }
+  .em-ret ol { padding-left:54px; margin-bottom:34px; }
+  .em-ret li { padding-left:4px; margin-bottom:22px; }
+  .em-ret li:last-child { margin-bottom:0; }
+  .em-ret li b { font-weight:700; }
+  .em-ret hr { margin:0 0 34px; }
+  .em-actions { margin-bottom:34px; }
+  .em-act { display:flex; align-items:center; gap:30px; margin-bottom:34px; }
+  .em-act:last-child { margin-bottom:0; }
+  .em-act p { flex:1; margin:0 !important; font-size:0.8em; line-height:1.75; }
+  .em-act a { flex:0 0 46%; text-align:center; padding:16px 20px; border-radius:40px; font-weight:600; font-size:0.92em; text-decoration:none; border:1px solid transparent; }
+  .em-act a.outline { background:#fff; }
+  .em-ret .em-facts p { margin:0; }
+  .em-ret .em-facts { margin-bottom:70px; }
   .em-foot { text-align:center; padding:0 20px 60px; color:#9a9aa6; font-size:1.25em; }
   .em-help { color:#05001c; margin-bottom:26px; }
   .em-help .bar { margin:0 14px; }
@@ -128,6 +146,8 @@
     .em-foot { font-size:0.92em; }
     .em-btn { width:100%; }
     .em-track { padding:14px 22px; }
+    .em-act { flex-direction:column; align-items:stretch; gap:12px; }
+    .em-ret ol { padding-left:24px; }
     .up { flex-direction:column; }
     .up-btns { align-items:flex-start; }
   }
@@ -222,9 +242,15 @@
   <div class="preview-col">
     <div class="pv-top">
       <div class="sender"><div class="n" id="pvSender">ShipInsure</div><div class="to">to Customer</div></div>
-      <div class="seg" role="tablist">
-        <button type="button" data-type="confirm" class="on">Ordered</button>
-        <button type="button" data-type="delivered">Delivered</button>
+      <div class="pv-segs">
+        <div class="seg" id="segCover" title="Coverage type">
+          <button type="button" data-cover="pp" class="on">Package Protection</button>
+          <button type="button" data-cover="returns">+ Returns</button>
+        </div>
+        <div class="seg" id="segType" title="Email">
+          <button type="button" data-type="confirm" class="on">Ordered</button>
+          <button type="button" data-type="delivered">Delivered</button>
+        </div>
       </div>
     </div>
 
@@ -244,6 +270,25 @@
         <div class="em-btn-wrap"><a class="em-btn" id="pvBtn" href="#" onclick="return false">File a Claim</a></div>
         <div class="em-sign">Best,<br><span id="pvSign">ShipInsure</span></div>
       </div>
+      <div class="em-body em-ret" id="emOrderedRet" hidden>
+        <h2>Rest Easy, Your Order's Protected</h2>
+        <p>Thank you for your order with <span class="js-store"></span>. We are thrilled to inform you that your purchase is protected by our comprehensive coverage plan through ShipInsure.</p>
+        <h3>Here's what you can expect:</h3>
+        <ol>
+          <li><b>Protection against Loss, Damage, and Theft:</b> Your order is safeguarded throughout its journey to your doorstep. In the rare event of loss, damage, or theft during transit, rest assured that we've got you covered.</li>
+          <li><b>Free Return Label:</b> If for any reason you need to return your item, we've made the process hassle-free. Simply click the link below to generate a free return label and send the item back to us.</li>
+        </ol>
+        <hr>
+        <div class="em-actions">
+          <div class="em-act"><p>If your order is lost, damaged, stolen, you can file a claim here:</p><a href="#" onclick="return false" id="pvRetClaim">File a Claim</a></div>
+          <div class="em-act"><p>If you need to start a return, you can start that process here</p><a href="#" onclick="return false" class="outline" id="pvRetReturn">Start a Return</a></div>
+        </div>
+        <hr>
+        <div class="em-facts">
+          <p>Your ShipInsure Number: <b class="js-si"></b></p>
+          <p><span class="js-store"></span> Order Number: <b class="js-order"></b></p>
+        </div>
+      </div>
       <div class="em-body em-deliv" id="emDelivered" hidden>
         <h2>Your order was delivered</h2>
         <div class="em-meta">
@@ -254,6 +299,10 @@
         <p class="em-carrier">Carrier: <span id="pvCarrier"></span></p>
         <p class="em-claimline">If your order is lost, damaged, or stolen, you can file a claim</p>
         <a class="em-btn-grey" href="#" onclick="return false">File a Claim</a>
+        <div id="pvDelivRet" hidden>
+          <p class="em-claimline">If you need to start a return, you can start that process here</p>
+          <a class="em-btn-grey last" href="#" onclick="return false">Start a Return</a>
+        </div>
       </div>
       <div class="em-foot">
         <div class="em-help">Need Help?<span class="bar">|</span><a id="pvLink" href="#" onclick="return false">Visit Help Center</a></div>
@@ -271,7 +320,7 @@
   const DEFAULTS = {
     storeName: 'SALOON HIDE', senderName: '', btnColor: '#6975F6', btnText: '#FFFFFF', linkColor: '#6975F6',
     orderNum: '987654', siNum: 'SI12345678',
-    trackNum: '1234567890', carrier: 'USPS', delivLoc: 'San Diego, CA, USA', delivAt: 'Sept 26, 2024 3:30 PM', type: 'confirm', logo: null, banner: null
+    trackNum: '1234567890', carrier: 'USPS', delivLoc: 'San Diego, CA, USA', delivAt: 'Sept 26, 2024 3:30 PM', type: 'confirm', returns: false, logo: null, banner: null
   };
   const DEFAULT_LOGO = 'shipinsure-logo-dark.png';
   const DEFAULT_BANNER = 'package-protection-banner.jpg';
@@ -296,9 +345,16 @@
   }
 
   function render() {
-    const deliv = state.type === 'delivered';
-    $('emOrdered').hidden = deliv;
+    const deliv = state.type === 'delivered', ret = !!state.returns;
+    $('emOrdered').hidden = deliv || ret;
+    $('emOrderedRet').hidden = deliv || !ret;
     $('emDelivered').hidden = !deliv;
+    $('emDelivered').classList.toggle('ret', ret);
+    $('pvDelivRet').hidden = !ret;
+    document.querySelectorAll('.js-si').forEach(e => e.textContent = state.siNum);
+    document.querySelectorAll('.js-order').forEach(e => e.textContent = state.orderNum);
+    Object.assign($('pvRetClaim').style, { background: state.btnColor, color: state.btnText, borderColor: state.btnColor });
+    Object.assign($('pvRetReturn').style, { color: state.linkColor, borderColor: state.linkColor });
     $('pvHead').textContent = "We've got you covered!";
     $('pvIntro').innerHTML = orderedIntro(state.storeName);
     $('pvClaimLine').textContent = 'If your order is lost, damaged, or stolen, you can file a claim below.';
@@ -320,7 +376,8 @@
     btn.style.background = state.btnColor;
     btn.style.color = state.btnText;
     $('pvLink').style.color = state.linkColor;
-    document.querySelectorAll('.seg button').forEach(b => b.classList.toggle('on', b.dataset.type === state.type));
+    document.querySelectorAll('#segType button').forEach(b => b.classList.toggle('on', b.dataset.type === state.type));
+    document.querySelectorAll('#segCover button').forEach(b => b.classList.toggle('on', (b.dataset.cover === 'returns') === ret));
     $('logoClear').classList.toggle('show', !!state.logo);
     $('bannerClear').classList.toggle('show', !!state.banner);
     $('logoThumb').classList.toggle('show', !!state.logo);
@@ -350,7 +407,8 @@
       state[id] = e.target.value.toUpperCase(); $(id).value = state[id]; $('f-' + id).classList.remove('bad'); render();
     });
   });
-  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => { state.type = b.dataset.type; render(); }));
+  document.querySelectorAll('#segType button').forEach(b => b.addEventListener('click', () => { state.type = b.dataset.type; render(); }));
+  document.querySelectorAll('#segCover button').forEach(b => b.addEventListener('click', () => { state.returns = b.dataset.cover === 'returns'; render(); }));
 
   // ── Uploads ──
   // Images are re-encoded through a canvas so they stay small enough to ride in the share link.
@@ -471,6 +529,7 @@
     if (q.get('sender')) state.senderName = q.get('sender');
     [['btn', 'btnColor'], ['btntext', 'btnText'], ['link', 'linkColor']].forEach(([p, k]) => { const h = normHex(q.get(p)); if (h) state[k] = h; });
     if (q.get('type') === 'delivered') state.type = 'delivered';
+    if (q.get('returns') === '1') state.returns = true;
   }
   function resetAll() {
     state = { ...DEFAULTS };
