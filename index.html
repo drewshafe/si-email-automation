@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/drewshafe/si-rep-hub/main/Rephubfavi.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   :root {
@@ -85,35 +85,37 @@
   .seg button.on { background:var(--accent); color:#fff; }
 
   /* ── The email itself (kept in light colors — it's what the customer sees) ── */
-  .email { max-width:960px; background:#fff; border-radius:22px; overflow:hidden; color:#22314a; box-shadow:0 2px 14px rgba(30,40,90,0.05); }
-  .em-logo { display:flex; align-items:center; justify-content:center; padding:22px 20px 18px; min-height:92px; }
-  .em-logo img { max-width:240px; max-height:56px; width:auto; height:auto; display:block; }
+  .email { max-width:870px; background:#fff; border-radius:22px; overflow:hidden; color:#05001c; font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; letter-spacing:0; box-shadow:0 2px 14px rgba(30,40,90,0.05); }
+  .em-logo { display:flex; align-items:center; justify-content:center; padding:26px 20px 24px; min-height:96px; }
+  .em-logo img { max-width:240px; max-height:50px; width:auto; height:auto; display:block; }
+  .em-logo img.si-default { height:38px; }
   .em-banner { display:block; width:100%; height:auto; background:#a3adff; }
-  .em-body { padding:44px 66px 20px; font-size:1.06em; line-height:1.62; }
-  .em-body h2 { font-size:1.75em; font-weight:700; margin-bottom:20px; line-height:1.25; }
-  .em-body p { margin-bottom:18px; }
-  .em-body hr { border:none; border-top:1px solid #9aa0ad; margin:30px 0; }
-  .em-facts { line-height:1.7; }
+  .em-body { padding:58px 52px 0; font-size:1.42em; line-height:1.55; }
+  .em-body h2 { font-size:1.6em; font-weight:700; letter-spacing:-0.015em; margin-bottom:30px; line-height:1.2; }
+  .em-body p { margin-bottom:22px; }
+  .em-body hr { border:none; border-top:1px solid #e7ebf0; margin:34px 0; }
+  .em-facts p { margin-bottom:26px; }
+  .em-facts p:last-child { margin-bottom:0; }
   .em-facts b { font-weight:700; }
-  .em-claim { display:flex; align-items:center; gap:28px; margin:-2px 0 28px; padding-left:12px; }
-  .em-claim p { flex:1; margin:0; }
-  .em-btn { flex:0 0 auto; min-width:46%; text-align:center; padding:14px 30px; border-radius:40px; font-weight:600; font-size:1.02em; text-decoration:none; }
-  .em-sign { margin-bottom:60px; }
-  .em-foot { text-align:center; padding:0 20px 50px; }
-  .em-help { display:flex; align-items:center; justify-content:center; gap:18px; font-size:1.45em; font-weight:700; margin-bottom:26px; }
-  .em-help .bar { width:1px; height:40px; background:#22314a; }
-  .em-help a { text-decoration:underline; text-underline-offset:3px; }
-  .em-copy { font-size:0.95em; color:#a0a5b1; margin-bottom:14px; }
-  .em-pow { display:flex; align-items:center; justify-content:center; gap:10px; font-size:0.88em; color:#a0a5b1; margin-bottom:16px; }
-  .em-pow img { height:22px; opacity:0.45; filter:grayscale(1); }
-  .em-legal { font-size:0.95em; color:#a0a5b1; display:flex; justify-content:center; gap:18px; }
+  .em-claim p { margin-bottom:22px; }
+  .em-btn-wrap { text-align:center; margin-bottom:68px; }
+  .em-btn { display:inline-block; width:90%; text-align:center; padding:20px 30px; border-radius:40px; font-weight:600; font-size:1em; text-decoration:none; }
+  .em-sign { margin-bottom:82px; }
+  .em-foot { text-align:center; padding:0 20px 60px; color:#9a9aa6; font-size:1.25em; }
+  .em-help { color:#05001c; margin-bottom:26px; }
+  .em-help .bar { margin:0 14px; }
+  .em-help a { text-decoration:none; }
+  .em-copy, .em-addr { margin-bottom:22px; }
+  .em-pow { display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.86em; margin-bottom:20px; }
+  .em-pow img { height:24px; opacity:0.35; }
+  .em-legal { display:flex; justify-content:center; gap:12px; }
 
   @media (max-width:640px) {
     .wrap { padding:16px; gap:24px; }
     .card { padding:24px 18px; }
-    .em-body { padding:30px 22px 10px; font-size:0.98em; }
-    .em-claim { flex-direction:column; align-items:stretch; padding-left:0; gap:14px; }
-    .em-help { font-size:1.15em; }
+    .em-body { padding:34px 22px 0; font-size:1.02em; }
+    .em-foot { font-size:0.92em; }
+    .em-btn { width:100%; }
     .up { flex-direction:column; }
     .up-btns { align-items:flex-start; }
   }
@@ -184,9 +186,8 @@
         <div class="inner">
           <div class="row">
             <div class="field"><input type="text" id="orderNum" placeholder=" " autocomplete="off"><label>Order Number</label></div>
-            <div class="field"><input type="text" id="protValue" placeholder=" " autocomplete="off"><label>Protected Value</label></div>
+            <div class="field"><input type="text" id="siNum" placeholder=" " autocomplete="off"><label>ShipInsure Number</label></div>
           </div>
-          <div class="field"><input type="text" id="siNum" placeholder=" " autocomplete="off"><label>ShipInsure Number</label></div>
         </div>
       </details>
 
@@ -202,7 +203,7 @@
     <div class="pv-top">
       <div class="sender"><div class="n" id="pvSender">ShipInsure</div><div class="to">to Customer</div></div>
       <div class="seg" role="tablist">
-        <button type="button" data-type="confirm" class="on">Order Confirmation</button>
+        <button type="button" data-type="confirm" class="on">Ordered</button>
         <button type="button" data-type="delivered">Delivered</button>
       </div>
     </div>
@@ -215,22 +216,20 @@
         <div id="pvIntro"></div>
         <hr>
         <div class="em-facts">
-          Your ShipInsure Number: <b id="pvSi"></b><br>
-          <span class="js-store"></span> Order Number: <b id="pvOrder"></b><br>
-          Protected Value: <b id="pvValue"></b>
+          <p>Your ShipInsure Number: <b id="pvSi"></b></p>
+          <p><span class="js-store"></span> Order Number: <b id="pvOrder"></b></p>
         </div>
         <hr>
-        <div class="em-claim">
-          <p id="pvClaimLine">If your order is lost, damaged, or stolen, you can file a claim here:</p>
-          <a class="em-btn" id="pvBtn" href="#" onclick="return false">File a claim</a>
-        </div>
-        <div class="em-sign">Best,<br><span id="pvSign">ShipInsure Team</span></div>
+        <div class="em-claim"><p id="pvClaimLine"></p></div>
+        <div class="em-btn-wrap"><a class="em-btn" id="pvBtn" href="#" onclick="return false">File a Claim</a></div>
+        <div class="em-sign">Best,<br><span id="pvSign">ShipInsure</span></div>
       </div>
       <div class="em-foot">
-        <div class="em-help"><span>Need Help?</span><span class="bar"></span><a id="pvLink" href="#" onclick="return false">Visit Help Center</a></div>
+        <div class="em-help">Need Help?<span class="bar">|</span><a id="pvLink" href="#" onclick="return false">Visit Help Center</a></div>
         <div class="em-copy">Copyright © <span id="pvYear"></span> | ShipInsure LLC All rights reserved.</div>
-        <div class="em-pow">Powered by <img src="si_email_logo.png" alt="ShipInsure"></div>
-        <div class="em-legal"><span>Privacy</span><span>Terms</span></div>
+        <div class="em-addr">ShipInsure LLC, 1221 College Park Dr Suite 116 Dover, DE 19904</div>
+        <div class="em-pow">Powered by <img src="shipinsure-logo-dark.png" alt="ShipInsure"></div>
+        <div class="em-legal"><span>Privacy</span><span>Terms</span><span>Insurance Policy</span></div>
       </div>
     </div>
   </div>
@@ -239,12 +238,12 @@
 
 <script>
   const DEFAULTS = {
-    storeName: 'SALOON HIDE', senderName: '', btnColor: '#6575FF', btnText: '#FFFFFF', linkColor: '#6575FF',
-    orderNum: '3944', protValue: '$232.09', siNum: 'SI249587625', type: 'confirm', logo: null, banner: null
+    storeName: 'SALOON HIDE', senderName: '', btnColor: '#6975F6', btnText: '#FFFFFF', linkColor: '#6975F6',
+    orderNum: '987654', siNum: 'SI12345678', type: 'confirm', logo: null, banner: null
   };
-  const DEFAULT_LOGO = 'si_email_logo.png';
-  const DEFAULT_BANNER = 'banner_default.jpg';
-  const TEXT_IDS = ['storeName', 'senderName', 'btnColor', 'btnText', 'linkColor', 'orderNum', 'protValue', 'siNum'];
+  const DEFAULT_LOGO = 'shipinsure-logo-dark.png';
+  const DEFAULT_BANNER = 'package-protection-banner.jpg';
+  const TEXT_IDS = ['storeName', 'senderName', 'btnColor', 'btnText', 'linkColor', 'orderNum', 'siNum'];
   const COLOR_IDS = ['btnColor', 'btnText', 'linkColor'];
   let state = { ...DEFAULTS };
   const $ = id => document.getElementById(id);
@@ -256,22 +255,23 @@
     return /^#[0-9A-F]{6}$/.test(v) ? v : null;
   }
 
-  // ── Copy for each automated email. "Delivered" mirrors the confirmation's layout. ──
+  // ── Copy for each automated email. "Ordered" is verbatim from the live Merchant Portal email;
+  // "Delivered" is a draft that follows the same structure. ──
   function copyFor(type, store) {
     const s = esc(store || 'your store');
     if (type === 'delivered') return {
       head: 'Your order has been delivered!',
-      intro: `<p>Your order from ${s} has been marked as delivered and is still fully covered by ShipInsure.</p>
-              <p>Didn't receive it, or did something arrive damaged? Don't worry — your Package Protection covers loss, damage, and theft, so you can get it resolved quickly.</p>
-              <p>Plus, we're contributing to carbon removal to help offset its footprint and make your shopping experience even more eco-friendly.</p>`,
-      claim: 'If your order is missing, damaged, or stolen, you can file a claim here:'
+      intro: `<p>Your order from ${s} has been delivered and is fully covered by ShipInsure.</p>
+              <p>Didn't receive it, or did something arrive damaged? Your ShipInsure Package Protection has you covered.</p>
+              <p>We've got you covered against loss, damage, or theft, providing you with peace of mind for your valuable order.</p>`,
+      claim: 'If your order is lost, damaged, or stolen, you can file a claim below.'
     };
     return {
-      head: 'We’ve got you covered!',
+      head: "We've got you covered!",
       intro: `<p>Your order from ${s} is fully covered by ShipInsure.</p>
               <p>Experience worry-free shopping now that your order is covered with ShipInsure’s Package Protection.</p>
-              <p>We've got you covered against loss, damage, or theft, providing you with peace of mind for your valuable order. Plus, we're contributing to carbon removal to help offsetting its footprint and make your shopping experience even more eco-friendly.</p>`,
-      claim: 'If your order is lost, damaged, or stolen, you can file a claim here:'
+              <p>We've got you covered against loss, damage, or theft, providing you with peace of mind for your valuable order.</p>`,
+      claim: 'If your order is lost, damaged, or stolen, you can file a claim below.'
     };
   }
 
@@ -283,10 +283,10 @@
     document.querySelectorAll('.js-store').forEach(e => e.textContent = state.storeName || 'Store');
     $('pvSi').textContent = state.siNum;
     $('pvOrder').textContent = state.orderNum;
-    $('pvValue').textContent = state.protValue;
     $('pvSender').textContent = state.senderName || 'ShipInsure';
-    $('pvSign').textContent = (state.senderName ? state.senderName : 'ShipInsure') + ' Team';
+    $('pvSign').textContent = state.senderName || 'ShipInsure';
     $('pvLogo').src = state.logo || DEFAULT_LOGO;
+    $('pvLogo').classList.toggle('si-default', !state.logo);
     $('pvBanner').src = state.banner || DEFAULT_BANNER;
     const btn = $('pvBtn');
     btn.style.background = state.btnColor;
