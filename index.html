@@ -425,8 +425,10 @@
     Object.keys(DEFAULTS).forEach(k => { if (state[k] !== DEFAULTS[k]) out[k] = state[k]; });
     return btoa(unescape(encodeURIComponent(JSON.stringify(out))));
   }
+  // Also called by the Rep Hub's toolbar "Copy Link" (same origin).
+  window.eaPreviewLink = () => location.origin + location.pathname + '#d=' + encodeState();
   function copyLink() {
-    const url = location.origin + location.pathname + '#d=' + encodeState();
+    const url = eaPreviewLink();
     const done = () => showToast(state.banner && url.length > 200000 ? 'Link copied (large — includes banner)' : 'Link copied!');
     navigator.clipboard.writeText(url).then(done, () => { history.replaceState(null, '', '#d=' + encodeState()); showToast('Link is in the address bar'); });
   }
