@@ -101,6 +101,17 @@
   .em-btn-wrap { text-align:center; margin-bottom:68px; }
   .em-btn { display:inline-block; width:90%; text-align:center; padding:20px 30px; border-radius:40px; font-weight:600; font-size:1em; text-decoration:none; }
   .em-sign { margin-bottom:82px; }
+  /* Delivered email: centered, tracking pill (button color) + neutral File a Claim */
+  .em-deliv { text-align:center; padding-top:52px; }
+  .em-deliv h2 { margin-bottom:22px; }
+  .em-meta { display:flex; justify-content:center; flex-wrap:wrap; gap:8px 38px; color:#3a3d4a; font-size:0.9em; margin-bottom:26px; }
+  .em-meta span { display:inline-flex; align-items:center; gap:8px; }
+  .em-meta svg { width:18px; height:18px; flex:0 0 auto; }
+  .em-track { display:inline-block; max-width:100%; padding:16px 54px; border-radius:40px; font-size:0.94em; text-transform:uppercase; margin-bottom:34px; }
+  .em-track b { font-weight:700; text-decoration:underline; text-underline-offset:3px; }
+  .em-carrier { color:#3a3d4a; font-size:0.9em; margin-bottom:46px !important; }
+  .em-deliv .em-claimline { color:#3a3d4a; font-size:0.9em; margin-bottom:22px; }
+  .em-btn-grey { display:inline-block; padding:16px 58px; border-radius:40px; background:#ededed; color:#000; font-size:0.94em; text-decoration:none; margin-bottom:68px; }
   .em-foot { text-align:center; padding:0 20px 60px; color:#9a9aa6; font-size:1.25em; }
   .em-help { color:#05001c; margin-bottom:26px; }
   .em-help .bar { margin:0 14px; }
@@ -116,6 +127,7 @@
     .em-body { padding:34px 22px 0; font-size:1.02em; }
     .em-foot { font-size:0.92em; }
     .em-btn { width:100%; }
+    .em-track { padding:14px 22px; }
     .up { flex-direction:column; }
     .up-btns { align-items:flex-start; }
   }
@@ -188,6 +200,14 @@
             <div class="field"><input type="text" id="orderNum" placeholder=" " autocomplete="off"><label>Order Number</label></div>
             <div class="field"><input type="text" id="siNum" placeholder=" " autocomplete="off"><label>ShipInsure Number</label></div>
           </div>
+          <div class="row">
+            <div class="field"><input type="text" id="trackNum" placeholder=" " autocomplete="off"><label>Tracking Number</label></div>
+            <div class="field"><input type="text" id="carrier" placeholder=" " autocomplete="off"><label>Carrier</label></div>
+          </div>
+          <div class="row">
+            <div class="field"><input type="text" id="delivLoc" placeholder=" " autocomplete="off"><label>Delivered To</label></div>
+            <div class="field"><input type="text" id="delivAt" placeholder=" " autocomplete="off"><label>Delivered At</label></div>
+          </div>
         </div>
       </details>
 
@@ -211,7 +231,7 @@
     <div class="email" id="email">
       <div class="em-logo"><img id="pvLogo" alt="Logo"></div>
       <img class="em-banner" id="pvBanner" alt="">
-      <div class="em-body">
+      <div class="em-body" id="emOrdered">
         <h2 id="pvHead"></h2>
         <div id="pvIntro"></div>
         <hr>
@@ -223,6 +243,17 @@
         <div class="em-claim"><p id="pvClaimLine"></p></div>
         <div class="em-btn-wrap"><a class="em-btn" id="pvBtn" href="#" onclick="return false">File a Claim</a></div>
         <div class="em-sign">Best,<br><span id="pvSign">ShipInsure</span></div>
+      </div>
+      <div class="em-body em-deliv" id="emDelivered" hidden>
+        <h2>Your order was delivered</h2>
+        <div class="em-meta">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span id="pvLoc"></span></span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="pvWhen"></span></span>
+        </div>
+        <div class="em-track" id="pvTrack">Tracking Number: <b id="pvTrackNum"></b></div>
+        <p class="em-carrier">Carrier: <span id="pvCarrier"></span></p>
+        <p class="em-claimline">If your order is lost, damaged, or stolen, you can file a claim</p>
+        <a class="em-btn-grey" href="#" onclick="return false">File a Claim</a>
       </div>
       <div class="em-foot">
         <div class="em-help">Need Help?<span class="bar">|</span><a id="pvLink" href="#" onclick="return false">Visit Help Center</a></div>
@@ -239,11 +270,12 @@
 <script>
   const DEFAULTS = {
     storeName: 'SALOON HIDE', senderName: '', btnColor: '#6975F6', btnText: '#FFFFFF', linkColor: '#6975F6',
-    orderNum: '987654', siNum: 'SI12345678', type: 'confirm', logo: null, banner: null
+    orderNum: '987654', siNum: 'SI12345678',
+    trackNum: '1234567890', carrier: 'USPS', delivLoc: 'San Diego, CA, USA', delivAt: 'Sept 26, 2024 3:30 PM', type: 'confirm', logo: null, banner: null
   };
   const DEFAULT_LOGO = 'shipinsure-logo-dark.png';
   const DEFAULT_BANNER = 'package-protection-banner.jpg';
-  const TEXT_IDS = ['storeName', 'senderName', 'btnColor', 'btnText', 'linkColor', 'orderNum', 'siNum'];
+  const TEXT_IDS = ['storeName', 'senderName', 'btnColor', 'btnText', 'linkColor', 'orderNum', 'siNum', 'trackNum', 'carrier', 'delivLoc', 'delivAt'];
   const COLOR_IDS = ['btnColor', 'btnText', 'linkColor'];
   let state = { ...DEFAULTS };
   const $ = id => document.getElementById(id);
@@ -255,31 +287,27 @@
     return /^#[0-9A-F]{6}$/.test(v) ? v : null;
   }
 
-  // ── Copy for each automated email. "Ordered" is verbatim from the live Merchant Portal email;
-  // "Delivered" is a draft that follows the same structure. ──
-  function copyFor(type, store) {
+  // ── Both emails mirror the live Merchant Portal templates verbatim. ──
+  function orderedIntro(store) {
     const s = esc(store || 'your store');
-    if (type === 'delivered') return {
-      head: 'Your order has been delivered!',
-      intro: `<p>Your order from ${s} has been delivered and is fully covered by ShipInsure.</p>
-              <p>Didn't receive it, or did something arrive damaged? Your ShipInsure Package Protection has you covered.</p>
-              <p>We've got you covered against loss, damage, or theft, providing you with peace of mind for your valuable order.</p>`,
-      claim: 'If your order is lost, damaged, or stolen, you can file a claim below.'
-    };
-    return {
-      head: "We've got you covered!",
-      intro: `<p>Your order from ${s} is fully covered by ShipInsure.</p>
-              <p>Experience worry-free shopping now that your order is covered with ShipInsure’s Package Protection.</p>
-              <p>We've got you covered against loss, damage, or theft, providing you with peace of mind for your valuable order.</p>`,
-      claim: 'If your order is lost, damaged, or stolen, you can file a claim below.'
-    };
+    return `<p>Your order from ${s} is fully covered by ShipInsure.</p>
+            <p>Experience worry-free shopping now that your order is covered with ShipInsure’s Package Protection.</p>
+            <p>We've got you covered against loss, damage, or theft, providing you with peace of mind for your valuable order.</p>`;
   }
 
   function render() {
-    const c = copyFor(state.type, state.storeName);
-    $('pvHead').textContent = c.head;
-    $('pvIntro').innerHTML = c.intro;
-    $('pvClaimLine').textContent = c.claim;
+    const deliv = state.type === 'delivered';
+    $('emOrdered').hidden = deliv;
+    $('emDelivered').hidden = !deliv;
+    $('pvHead').textContent = "We've got you covered!";
+    $('pvIntro').innerHTML = orderedIntro(state.storeName);
+    $('pvClaimLine').textContent = 'If your order is lost, damaged, or stolen, you can file a claim below.';
+    $('pvLoc').textContent = state.delivLoc;
+    $('pvWhen').textContent = state.delivAt;
+    $('pvTrackNum').textContent = state.trackNum;
+    $('pvCarrier').textContent = state.carrier;
+    $('pvTrack').style.background = state.btnColor;
+    $('pvTrack').style.color = state.btnText;
     document.querySelectorAll('.js-store').forEach(e => e.textContent = state.storeName || 'Store');
     $('pvSi').textContent = state.siNum;
     $('pvOrder').textContent = state.orderNum;
