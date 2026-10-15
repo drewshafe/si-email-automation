@@ -142,15 +142,33 @@
   @media (max-width:640px) {
     .wrap { padding:16px; gap:24px; }
     .card { padding:24px 18px; }
+    .up { flex-direction:column; }
+    .up-btns { align-items:flex-start; }
+  }
+  /* Phone-width email: keyed to the email's own width so the Mobile preview matches a real phone */
+  .email-host { container-type:inline-size; }
+  @container (max-width:640px) {
     .em-body { padding:34px 22px 0; font-size:1.02em; }
     .em-foot { font-size:0.92em; }
     .em-btn { width:100%; }
     .em-track { padding:14px 22px; }
     .em-act { flex-direction:column; align-items:stretch; gap:12px; }
     .em-ret ol { padding-left:24px; }
-    .up { flex-direction:column; }
-    .up-btns { align-items:flex-start; }
   }
+
+  /* ── Desktop / Mobile preview ── */
+  .dev-seg { display:inline-flex; background:var(--card); border-radius:30px; padding:4px; box-shadow:0 2px 14px rgba(30,40,90,0.04); }
+  .dev-seg button { font:inherit; font-size:0.8em; font-weight:700; padding:7px 14px; border-radius:30px; border:none; background:none; color:var(--muted); cursor:pointer; }
+  .dev-seg button.on { background:var(--accent); color:#fff; }
+  body.pm .dev-seg button.on { background:linear-gradient(135deg,#b8902d,#e3c56a); color:#0a0a0a; }
+  .phone-mode .email-host { width:390px; max-width:100%; margin:0 auto; border:12px solid #17171c; border-radius:46px; overflow:hidden; background:#fff; box-shadow:0 18px 50px rgba(20,24,60,0.18); }
+  .phone-mode .email { border-radius:0; box-shadow:none; }
+  .phone-status { display:none; height:34px; align-items:center; justify-content:space-between; padding:0 26px 0 30px; font:600 13px/1 -apple-system,BlinkMacSystemFont,sans-serif; color:#111; background:#fff; position:relative; }
+  .phone-status::after { content:''; position:absolute; left:50%; top:8px; width:96px; height:24px; margin-left:-48px; border-radius:20px; background:#17171c; }
+  .phone-mode .phone-status { display:flex; }
+  body.view.phone-mode .wrap { padding:0; }
+  body.view.phone-mode .email-host { width:auto; border:0; border-radius:0; box-shadow:none; }
+  body.view.phone-mode .phone-status { display:none; }
 
   .toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(90px); background:#333; color:#fff; font-size:0.85em; font-weight:600; padding:10px 18px; border-radius:8px; box-shadow:0 6px 24px rgba(0,0,0,0.3); transition:transform .25s ease; z-index:200; }
   .toast.show { transform:translateX(-50%) translateY(0); }
@@ -262,9 +280,15 @@
           <button type="button" data-type="confirm" class="on">Ordered</button>
           <button type="button" data-type="delivered">Delivered</button>
         </div>
+        <div class="dev-seg" id="segDev" title="Preview size">
+          <button type="button" data-dev="desktop" class="on">🖥 Desktop</button>
+          <button type="button" data-dev="mobile">📱 Mobile</button>
+        </div>
       </div>
     </div>
 
+    <div class="email-host">
+    <div class="phone-status"><span>9:41</span><span>●●● ▮</span></div>
     <div class="email" id="email">
       <div class="em-logo"><img id="pvLogo" alt="Logo"></div>
       <img class="em-banner" id="pvBanner" alt="">
@@ -322,6 +346,7 @@
         <div class="em-pow">Powered by <img src="shipinsure-logo-dark.png" alt="ShipInsure"></div>
         <div class="em-legal"><span>Privacy</span><span>Terms</span><span>Insurance Policy</span></div>
       </div>
+    </div>
     </div>
   </div>
 </div>
@@ -580,6 +605,17 @@
     document.querySelector('[data-claim]').addEventListener('click', () => parent.postMessage({ siExp: 'claim' }, '*'));
     window.addEventListener('message', e => { const d = e.data; if (d && d.siExp === 'set') { if (d.type) state.type = d.type; render(); scrollTo(0, 0); } });
   }
+
+  // ── Desktop / Mobile preview (also set by the Email → Claim experience in view mode) ──
+  function setDevice(dev) {
+    const mobile = dev === 'mobile';
+    document.body.classList.toggle('phone-mode', mobile);
+    document.querySelectorAll('#segDev button').forEach(b => b.classList.toggle('on', (b.dataset.dev === 'mobile') === mobile));
+    try { localStorage.setItem('si_preview_device', mobile ? 'mobile' : 'desktop'); } catch (e) {}
+  }
+  document.querySelectorAll('#segDev button').forEach(b => b.addEventListener('click', () => setDevice(b.dataset.dev)));
+  window.addEventListener('message', e => { const d = e.data; if (d && d.siExp === 'device') document.body.classList.toggle('phone-mode', !!d.mobile); });
+  if (!VIEW) { try { if (localStorage.getItem('si_preview_device') === 'mobile') setDevice('mobile'); } catch (e) {} }
 
   // ── Rep Hub theme hand-off ──
   function setTheme(t) { document.body.classList.toggle('pm', t === 'midnight'); }
