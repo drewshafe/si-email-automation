@@ -192,6 +192,8 @@
   body.pm .swatches .sw-apply { color:#d4af37; }
   body.pm details.sample { border-color:#22222b; }
 </style>
+<script src="https://drewshafe.github.io/si-roi-calculator/sb.js"></script>
+<script src="https://drewshafe.github.io/si-rep-hub/folder-bar.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -626,6 +628,14 @@
   applyLink();
   syncInputs();
   render();
+
+  // ── Merchant folder save/load (Rep Hub → Merchant Folders) ──
+  if (!VIEW && window.SIFolderBar) SIFolderBar.mount({
+    kind: 'email', tool: 'Email Automation', before: document.querySelector('.wrap'),
+    getData: () => { const out = {}; Object.keys(DEFAULTS).forEach(k => { if (JSON.stringify(state[k]) !== JSON.stringify(DEFAULTS[k])) out[k] = state[k]; }); return out; },
+    applyData: d => { state = Object.assign({ ...DEFAULTS }, d); ['logoChecks', 'bannerChecks'].forEach(id => $(id).innerHTML = ''); syncInputs(); render(); },
+    defaultTitle: () => 'Email – ' + (state.storeName || 'Merchant') + (state.returns ? ' (+ Returns)' : '')
+  });
 </script>
 </body>
 </html>
